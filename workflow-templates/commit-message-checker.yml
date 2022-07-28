@@ -1,0 +1,23 @@
+name: 'Commit Message Check'
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
+jobs:
+  run_if:
+    if: github.head_ref != 'release'
+    name: Check Commit Message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Commit Type
+        uses: gsactions/commit-message-checker@v1
+        with:
+          pattern: '(\[(\w\s?)+\])?(\[([A-Z]{2,}\-[0-9]+)\])\s(.\s?)+'
+          excludeDescription: true
+          checkAllCommitMessages: true
+          accessToken: ${{ github.token }}
+          error: 'Your commit message is invalid. Check the documentation: https://studytube.atlassian.net/wiki/spaces/TECH/pages/2237202441/WIP+Git+Commit+Validations#Examples'
